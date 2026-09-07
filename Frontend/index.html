@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tasks</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+  </head>
+  <body>
+
+    <div id="toast" class="toast" role="status" aria-live="polite"></div>
+
+    <!-- ===================== AUTH ===================== -->
+    <section id="page-auth" class="auth">
+      <div class="auth-card">
+        <div class="auth-tabs" role="tablist">
+          <button type="button" class="tab-btn is-active" data-tab="login" role="tab">Log in</button>
+          <button type="button" class="tab-btn" data-tab="register" role="tab">Register</button>
+        </div>
+
+        <form id="login-form" class="auth-form is-active" novalidate>
+          <h1>Welcome back</h1>
+          <p class="auth-sub">Log in to see your tasks.</p>
+          <label class="field">
+            <span>Username</span>
+            <input type="text" name="username" autocomplete="username" required>
+          </label>
+          <label class="field">
+            <span>Password</span>
+            <input type="password" name="password" autocomplete="current-password" required>
+          </label>
+          <button type="submit" class="btn btn-primary btn-block">Log in</button>
+          <p class="auth-switch">No account? <button type="button" class="link-btn" data-tab="register">Register</button></p>
+        </form>
+
+        <form id="register-form" class="auth-form" novalidate>
+          <h1>Create your account</h1>
+          <p class="auth-sub">Takes less than a minute.</p>
+          <label class="field">
+            <span>Name</span>
+            <input type="text" name="name" required>
+          </label>
+          <label class="field">
+            <span>Username</span>
+            <input type="text" name="username" autocomplete="username" required>
+          </label>
+          <label class="field">
+            <span>Email</span>
+            <input type="email" name="email" autocomplete="email" required>
+          </label>
+          <label class="field">
+            <span>Password</span>
+            <input type="password" name="password" autocomplete="new-password" required>
+          </label>
+          <button type="submit" class="btn btn-primary btn-block">Create account</button>
+          <p class="auth-switch">Already have an account? <button type="button" class="link-btn" data-tab="login">Log in</button></p>
+        </form>
+      </div>
+    </section>
+
+    <!-- ===================== DASHBOARD ===================== -->
+    <section id="page-dashboard" class="dashboard" hidden>
+      <header class="profile">
+        <img class="avatar" src="https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_640.png" alt="">
+        <div class="profile-info">
+          <p class="profile-name" id="profile-name">—</p>
+          <p class="profile-meta"><span id="profile-username">—</span> · <span id="profile-email">—</span></p>
+        </div>
+        <button type="button" class="btn btn-ghost" id="logout-btn">Log out</button>
+      </header>
+
+      <div class="tasks-panel">
+        <div class="tasks-toolbar">
+          <h2>Your tasks</h2>
+          <button type="button" class="btn btn-primary" id="add-task-btn">Add task</button>
+        </div>
+
+        <div class="tasks-table-wrap">
+          <table class="tasks-table">
+            <thead>
+              <tr>
+                <th>Title</th>
+                <th>Status</th>
+                <th class="col-actions"></th>
+              </tr>
+            </thead>
+            <tbody id="tasks-body"></tbody>
+          </table>
+          <p id="tasks-empty" class="empty-state" hidden>No tasks yet — add your first one.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===================== MODAL: ADD TASK ===================== -->
+    <div class="modal-backdrop" id="add-modal" hidden>
+      <div class="modal" role="dialog" aria-modal="true" aria-labelledby="add-modal-title">
+        <div class="modal-header">
+          <h2 id="add-modal-title">Add task</h2>
+          <button type="button" class="modal-close" data-close="add-modal" aria-label="Close">&times;</button>
+        </div>
+        <form id="add-task-form" novalidate>
+          <label class="field">
+            <span>Title</span>
+            <input type="text" name="title" required>
+          </label>
+          <label class="field">
+            <span>Description</span>
+            <textarea name="description" rows="5"></textarea>
+          </label>
+          <button type="submit" class="btn btn-primary btn-block">Add task</button>
+        </form>
+      </div>
+    </div>
+
+    <!-- ===================== MODAL: VIEW TASK ===================== -->
+    <div class="modal-backdrop" id="view-modal" hidden>
+      <div class="modal" role="dialog" aria-modal="true" aria-labelledby="view-modal-title">
+        <div class="modal-header">
+          <h2 id="view-modal-title">Task</h2>
+          <button type="button" class="modal-close" data-close="view-modal" aria-label="Close">&times;</button>
+        </div>
+        <p id="view-description" class="view-description"></p>
+      </div>
+    </div>
+
+    <!-- ===================== MODAL: EDIT TASK ===================== -->
+    <div class="modal-backdrop" id="edit-modal" hidden>
+      <div class="modal" role="dialog" aria-modal="true" aria-labelledby="edit-modal-title">
+        <div class="modal-header">
+          <h2 id="edit-modal-title">Edit task</h2>
+          <button type="button" class="modal-close" data-close="edit-modal" aria-label="Close">&times;</button>
+        </div>
+        <form id="edit-task-form" novalidate>
+          <input type="hidden" name="task_id">
+          <label class="field">
+            <span>Title</span>
+            <input type="text" name="title" required>
+          </label>
+          <label class="field">
+            <span>Description</span>
+            <textarea name="description" rows="5"></textarea>
+          </label>
+          <label class="field">
+            <span>Completed</span>
+            <select name="is_completed">
+              <option value="false">No</option>
+              <option value="true">Yes</option>
+            </select>
+          </label>
+          <button type="submit" class="btn btn-primary btn-block">Save changes</button>
+        </form>
+      </div>
+    </div>
+
+    <script src="script.js"></script>
+  </body>
+</html>
