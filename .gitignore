@@ -1,0 +1,4 @@
+.evn
+__pycache__/
+.venv/
+.ini/
